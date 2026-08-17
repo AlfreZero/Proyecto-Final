@@ -1,0 +1,4 @@
+@model Proyecto_N2.Models.Tecnico
+@{ ViewBag.Title = "Editar registro"; }
+<link rel="stylesheet" href="~/Content/Crud.css" />
+<div class="form-card"><h2>Editar registro</h2>@using (Html.BeginForm()) { @Html.AntiForgeryToken() @Html.ValidationSummary(true) <input type="hidden" name="TecnicoID" value="@Model.TecnicoID" /><div><label>Nombre</label><input type="text" name="Nombre" value="@Model.Nombre" required />@Html.ValidationMessageFor(m => m.Nombre)</div><div><label>Especialidad</label><input type="text" name="Especialidad" value="@Model.Especialidad" required />@Html.ValidationMessageFor(m => m.Especialidad)</div><p><button class="btn btn-add" type="submit">Guardar</button> <a class="btn btn-edit" href="@Url.Action("Index")">Cancelar</a></p> }</div>

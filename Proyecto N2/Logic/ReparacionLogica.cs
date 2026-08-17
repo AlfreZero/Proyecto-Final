@@ -1,0 +1,10 @@
+using System; using System.Collections.Generic; using System.Data; using System.Data.SqlClient; using Proyecto_N2.Models;
+namespace Proyecto_N2.Logic { public class ReparacionLogica {
+public List<Reparacion> Listar(){var r=new List<Reparacion>();using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Reparaciones_Listar",c)){c.Open();using(var d=q.ExecuteReader()){while(d.Read())r.Add(Map(d));}}return r;}
+public Reparacion ObtenerPorId(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Reparaciones_Obtener @ReparacionID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();using(var d=q.ExecuteReader())return d.Read()?new Reparacion{ReparacionID=(int)d["ReparacionID"],EquipoID=(int)d["EquipoID"],FechaSolicitud=(DateTime)d["FechaSolicitud"],Estado=d["Estado"].ToString()}:null;}}
+public void Guardar(Reparacion x){Exec("EXEC dbo.Reparaciones_Guardar @EquipoID=@e,@FechaSolicitud=@f,@Estado=@s",x);}
+public void Editar(Reparacion x){Exec("EXEC dbo.Reparaciones_Editar @ReparacionID=@id,@EquipoID=@e,@FechaSolicitud=@f,@Estado=@s",x);}
+public void Eliminar(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Reparaciones_Eliminar @ReparacionID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();q.ExecuteNonQuery();}}
+private static Reparacion Map(IDataRecord d){return new Reparacion{ReparacionID=(int)d["ReparacionID"],EquipoID=(int)d["EquipoID"],TipoEquipo=d["TipoEquipo"].ToString(),FechaSolicitud=(DateTime)d["FechaSolicitud"],Estado=d["Estado"].ToString()};}
+private static void Exec(string s,Reparacion x){using(var c=Db.Connection())using(var q=new SqlCommand(s,c)){q.Parameters.Add("@id",SqlDbType.Int).Value=x.ReparacionID;q.Parameters.Add("@e",SqlDbType.Int).Value=x.EquipoID;q.Parameters.Add("@f",SqlDbType.Date).Value=x.FechaSolicitud.Date;q.Parameters.Add("@s",SqlDbType.NVarChar,40).Value=x.Estado;c.Open();q.ExecuteNonQuery();}}
+} }

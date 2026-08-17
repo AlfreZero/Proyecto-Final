@@ -1,0 +1,9 @@
+using System; using System.Collections.Generic; using System.Data; using System.Data.SqlClient; using Proyecto_N2.Models;
+namespace Proyecto_N2.Logic { public class TecnicoLogica {
+public List<Tecnico> Listar(){var r=new List<Tecnico>();using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Tecnicos_Listar",c)){c.Open();using(var d=q.ExecuteReader()){while(d.Read())r.Add(new Tecnico{TecnicoID=(int)d["TecnicoID"],Nombre=d["Nombre"].ToString(),Especialidad=d["Especialidad"].ToString()});}}return r;}
+public Tecnico ObtenerPorId(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Tecnicos_Obtener @TecnicoID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();using(var d=q.ExecuteReader())return d.Read()?new Tecnico{TecnicoID=(int)d["TecnicoID"],Nombre=d["Nombre"].ToString(),Especialidad=d["Especialidad"].ToString()}:null;}}
+public void Guardar(Tecnico x){Exec("EXEC dbo.Tecnicos_Guardar @Nombre=@n,@Especialidad=@e",x);}
+public void Editar(Tecnico x){Exec("EXEC dbo.Tecnicos_Editar @TecnicoID=@id,@Nombre=@n,@Especialidad=@e",x);}
+public void Eliminar(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Tecnicos_Eliminar @TecnicoID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();q.ExecuteNonQuery();}}
+private static void Exec(string s,Tecnico x){using(var c=Db.Connection())using(var q=new SqlCommand(s,c)){q.Parameters.Add("@id",SqlDbType.Int).Value=x.TecnicoID;q.Parameters.Add("@n",SqlDbType.NVarChar,100).Value=x.Nombre;q.Parameters.Add("@e",SqlDbType.NVarChar,100).Value=x.Especialidad;c.Open();q.ExecuteNonQuery();}}
+} }

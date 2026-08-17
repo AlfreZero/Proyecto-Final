@@ -1,0 +1,10 @@
+using System; using System.Collections.Generic; using System.Data; using System.Data.SqlClient; using Proyecto_N2.Models;
+namespace Proyecto_N2.Logic { public class DetalleReparacionLogica {
+public List<DetalleReparacion> Listar(){var r=new List<DetalleReparacion>();using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.DetallesReparacion_Listar",c)){c.Open();using(var d=q.ExecuteReader()){while(d.Read())r.Add(Map(d));}}return r;}
+public DetalleReparacion ObtenerPorId(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.DetallesReparacion_Obtener @DetalleID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();using(var d=q.ExecuteReader())return d.Read()?Map(d):null;}}
+public void Guardar(DetalleReparacion x){Exec("EXEC dbo.DetallesReparacion_Guardar @ReparacionID=@r,@Descripcion=@d,@FechaInicio=@i,@FechaFin=@f",x);}
+public void Editar(DetalleReparacion x){Exec("EXEC dbo.DetallesReparacion_Editar @DetalleID=@id,@ReparacionID=@r,@Descripcion=@d,@FechaInicio=@i,@FechaFin=@f",x);}
+public void Eliminar(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.DetallesReparacion_Eliminar @DetalleID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();q.ExecuteNonQuery();}}
+private static DetalleReparacion Map(IDataRecord d){return new DetalleReparacion{DetalleID=(int)d["DetalleID"],ReparacionID=(int)d["ReparacionID"],Descripcion=d["Descripcion"].ToString(),FechaInicio=(DateTime)d["FechaInicio"],FechaFin=d["FechaFin"]==DBNull.Value?(DateTime?)null:(DateTime)d["FechaFin"]};}
+private static void Exec(string s,DetalleReparacion x){using(var c=Db.Connection())using(var q=new SqlCommand(s,c)){q.Parameters.Add("@id",SqlDbType.Int).Value=x.DetalleID;q.Parameters.Add("@r",SqlDbType.Int).Value=x.ReparacionID;q.Parameters.Add("@d",SqlDbType.NVarChar,1000).Value=x.Descripcion;q.Parameters.Add("@i",SqlDbType.Date).Value=x.FechaInicio.Date;q.Parameters.Add("@f",SqlDbType.Date).Value=(object)(x.FechaFin.HasValue?(object)x.FechaFin.Value.Date:DBNull.Value);c.Open();q.ExecuteNonQuery();}}
+} }

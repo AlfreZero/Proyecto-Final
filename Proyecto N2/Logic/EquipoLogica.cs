@@ -1,0 +1,10 @@
+using System; using System.Collections.Generic; using System.Data; using System.Data.SqlClient; using Proyecto_N2.Models;
+namespace Proyecto_N2.Logic { public class EquipoLogica {
+public List<Equipo> Listar(){var r=new List<Equipo>(); using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Equipos_Listar",c)){c.Open();using(var d=q.ExecuteReader()){while(d.Read())r.Add(Map(d));}}return r;}
+public Equipo ObtenerPorId(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Equipos_Obtener @EquipoID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();using(var d=q.ExecuteReader())return d.Read()?new Equipo{EquipoID=(int)d["EquipoID"],TipoEquipo=d["TipoEquipo"].ToString(),Modelo=d["Modelo"].ToString(),UsuarioID=(int)d["UsuarioID"]}:null;}}
+public void Guardar(Equipo x){Exec("EXEC dbo.Equipos_Guardar @TipoEquipo=@t,@Modelo=@m,@UsuarioID=@u",x);}
+public void Editar(Equipo x){Exec("EXEC dbo.Equipos_Editar @EquipoID=@id,@TipoEquipo=@t,@Modelo=@m,@UsuarioID=@u",x);}
+public void Eliminar(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Equipos_Eliminar @EquipoID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();q.ExecuteNonQuery();}}
+private static Equipo Map(IDataRecord d){return new Equipo{EquipoID=(int)d["EquipoID"],TipoEquipo=d["TipoEquipo"].ToString(),Modelo=d["Modelo"].ToString(),UsuarioID=(int)d["UsuarioID"],NombreUsuario=d["NombreUsuario"].ToString()};}
+private static void Exec(string s,Equipo x){using(var c=Db.Connection())using(var q=new SqlCommand(s,c)){q.Parameters.Add("@id",SqlDbType.Int).Value=x.EquipoID;q.Parameters.Add("@t",SqlDbType.NVarChar,80).Value=x.TipoEquipo;q.Parameters.Add("@m",SqlDbType.NVarChar,80).Value=x.Modelo;q.Parameters.Add("@u",SqlDbType.Int).Value=x.UsuarioID;c.Open();q.ExecuteNonQuery();}}
+} }

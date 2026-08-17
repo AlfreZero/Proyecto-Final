@@ -1,0 +1,29 @@
+@model Proyecto_N2.Models.LoginViewModel
+@{
+    ViewBag.Title = "Iniciar sesión";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="login-page">
+    <section class="login-card" aria-labelledby="login-title">
+        <div class="login-icon">SM</div>
+        <h1 id="login-title">Bienvenido</h1>
+        <p class="login-subtitle">Ingresa para administrar el sistema de mantenimiento.</p>
+        @using (Html.BeginForm("Login", "Cuenta", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "No fue posible iniciar sesión.")
+            <div class="login-field">
+                @Html.LabelFor(m => m.CorreoElectronico)
+                @Html.TextBoxFor(m => m.CorreoElectronico, new { type = "email", placeholder = "correo@ejemplo.com", autocomplete = "username" })
+                @Html.ValidationMessageFor(m => m.CorreoElectronico)
+            </div>
+            <div class="login-field">
+                @Html.LabelFor(m => m.Clave)
+                @Html.PasswordFor(m => m.Clave, new { placeholder = "Contraseña", autocomplete = "current-password" })
+                @Html.ValidationMessageFor(m => m.Clave)
+            </div>
+            <button class="login-submit" type="submit">Entrar al sistema</button>
+        }
+        <p class="login-help">Usuario de prueba: <strong>admin@sistema.local</strong><br />Contraseña: <strong>123456</strong></p>
+    </section>
+</div>

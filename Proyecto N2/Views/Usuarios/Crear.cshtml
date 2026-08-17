@@ -1,0 +1,4 @@
+@model Proyecto_N2.Models.Usuario
+@{ ViewBag.Title = "Crear registro"; }
+<link rel="stylesheet" href="~/Content/Crud.css" />
+<div class="form-card"><h2>Crear registro</h2>@using (Html.BeginForm()) { @Html.AntiForgeryToken() @Html.ValidationSummary(true) <div><label>Nombre</label><input type="text" name="Nombre" value="@Model.Nombre" required />@Html.ValidationMessageFor(m => m.Nombre)</div><div><label>Correo electrónico</label><input type="text" name="CorreoElectronico" value="@Model.CorreoElectronico" required />@Html.ValidationMessageFor(m => m.CorreoElectronico)</div><div><label>Teléfono</label><input type="text" name="Telefono" value="@Model.Telefono" />@Html.ValidationMessageFor(m => m.Telefono)</div><p><button class="btn btn-add" type="submit">Guardar</button> <a class="btn btn-edit" href="@Url.Action("Index")">Cancelar</a></p> }</div>

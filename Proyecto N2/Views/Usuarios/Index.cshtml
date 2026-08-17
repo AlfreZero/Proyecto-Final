@@ -1,0 +1,5 @@
+@model IEnumerable<Proyecto_N2.Models.Usuario>
+@{ ViewBag.Title = "Mantenimiento de Usuarios"; }
+<link rel="stylesheet" href="~/Content/Crud.css" />
+<div class="crud-container"><div class="header-bar"><h2>Mantenimiento de Usuarios</h2><a class="btn btn-add" href="@Url.Action("Crear")">+ Nuevo registro</a></div>
+<table class="crud-table"><thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr></thead><tbody>@foreach(var item in Model){<tr><td>@item.UsuarioID</td><td>@item.Nombre</td><td>@item.CorreoElectronico</td><td>@item.Telefono</td><td><a class="btn btn-edit" href="@Url.Action("Editar", new { id=item.UsuarioID })">Editar</a><form method="post" action="@Url.Action("Eliminar")" style="display:inline" onsubmit="return confirm('¿Eliminar este registro?');">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@item.UsuarioID" /><button class="btn btn-delete" type="submit">Eliminar</button></form></td></tr>}</tbody></table></div>

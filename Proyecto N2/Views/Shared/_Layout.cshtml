@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Sistema de Mantenimiento</title>
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Site.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Crud.css")" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-shell">
+            <a class="brand" href="@Url.Action("Index", "Home")">
+                <span class="brand-mark">SM</span>
+                <span>
+                    <strong>Sistema</strong>
+                    <small>Mantenimiento técnico</small>
+                </span>
+            </a>
+
+            <button class="menu-toggle" type="button" aria-controls="main-menu" aria-expanded="false" onclick="document.getElementById('main-menu').classList.toggle('is-open');">
+                ☰
+            </button>
+
+            <nav id="main-menu" class="main-menu" aria-label="Menú principal">
+                <a href="@Url.Action("Index", "Home")">Inicio</a>
+                <a href="@Url.Action("Index", "Usuarios")">Usuarios</a>
+                <a href="@Url.Action("Index", "Equipos")">Equipos</a>
+                <a href="@Url.Action("Index", "Tecnicos")">Técnicos</a>
+                <a href="@Url.Action("Index", "Reparaciones")">Reparaciones</a>
+                <a href="@Url.Action("Index", "DetallesReparacion")">Detalles</a>
+                <a href="@Url.Action("Index", "Asignaciones")">Asignaciones</a>
+
+                @if (Request.IsAuthenticated)
+                {
+                <span class="menu-user">@User.Identity.Name</span>
+                <form method="post" action="@Url.Action("Logout", "Cuenta")" class="menu-logout">
+                    @Html.AntiForgeryToken()
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+                }
+                else
+                {
+                <a class="menu-login" href="@Url.Action("Login", "Cuenta")">Iniciar sesión</a>
+                }
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-shell page-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-shell">
+            &copy; @DateTime.Now.Year Sistema de Mantenimiento
+        </div>
+    </footer>
+
+    <script src="@Url.Content("~/Scripts/jquery-3.7.0.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.bundle.min.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,10 @@
+using System; using System.Collections.Generic; using System.Data; using System.Data.SqlClient; using Proyecto_N2.Models;
+namespace Proyecto_N2.Logic { public class AsignacionLogica {
+public List<Asignacion> Listar(){var r=new List<Asignacion>();using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Asignaciones_Listar",c)){c.Open();using(var d=q.ExecuteReader()){while(d.Read())r.Add(Map(d));}}return r;}
+public Asignacion ObtenerPorId(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Asignaciones_Obtener @AsignacionID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();using(var d=q.ExecuteReader())return d.Read()?new Asignacion{AsignacionID=(int)d["AsignacionID"],ReparacionID=(int)d["ReparacionID"],TecnicoID=(int)d["TecnicoID"],FechaAsignacion=(DateTime)d["FechaAsignacion"]}:null;}}
+public void Guardar(Asignacion x){Exec("EXEC dbo.Asignaciones_Guardar @ReparacionID=@r,@TecnicoID=@t,@FechaAsignacion=@f",x);}
+public void Editar(Asignacion x){Exec("EXEC dbo.Asignaciones_Editar @AsignacionID=@id,@ReparacionID=@r,@TecnicoID=@t,@FechaAsignacion=@f",x);}
+public void Eliminar(int id){using(var c=Db.Connection())using(var q=new SqlCommand("EXEC dbo.Asignaciones_Eliminar @AsignacionID=@id",c)){q.Parameters.Add("@id",SqlDbType.Int).Value=id;c.Open();q.ExecuteNonQuery();}}
+private static Asignacion Map(IDataRecord d){return new Asignacion{AsignacionID=(int)d["AsignacionID"],ReparacionID=(int)d["ReparacionID"],TecnicoID=(int)d["TecnicoID"],FechaAsignacion=(DateTime)d["FechaAsignacion"],NombreTecnico=d["NombreTecnico"].ToString(),EstadoReparacion=d["EstadoReparacion"].ToString()};}
+private static void Exec(string s,Asignacion x){using(var c=Db.Connection())using(var q=new SqlCommand(s,c)){q.Parameters.Add("@id",SqlDbType.Int).Value=x.AsignacionID;q.Parameters.Add("@r",SqlDbType.Int).Value=x.ReparacionID;q.Parameters.Add("@t",SqlDbType.Int).Value=x.TecnicoID;q.Parameters.Add("@f",SqlDbType.Date).Value=x.FechaAsignacion.Date;c.Open();q.ExecuteNonQuery();}}
+} }
